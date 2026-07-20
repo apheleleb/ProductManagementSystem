@@ -1,0 +1,73 @@
+.cat-shell {
+  height: 100vh;
+}
+
+.cat-sidenav {
+  width: 260px;
+  background: var(--cat-primary);
+  color: rgba(255, 255, 255, 0.92);
+  border-right: none;
+
+  ::ng-deep .mat-mdc-list-item {
+    color: rgba(255, 255, 255, 0.78);
+  }
+
+  ::ng-deep .mat-icon {
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  ::ng-deep .active-link {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+
+    .mat-icon { color: var(--cat-accent); }
+  }
+}
+
+.cat-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 20px 16px;
+  font-family: var(--cat-font-display);
+  font-weight: 800;
+  font-size: 18px;
+  letter-spacing: 0.01em;
+
+  mat-icon { color: var(--cat-accent); }
+}
+
+.cat-toolbar {
+  background: var(--cat-surface);
+  color: var(--cat-ink);
+  border-bottom: 1px solid var(--cat-border);
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+
+.cat-spacer { flex: 1 1 auto; }
+
+.cat-user-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cat-user-name {
+  max-width: 140px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cat-user-menu-header {
+  padding: 10px 16px;
+}
+.cat-user-menu-name { font-weight: 600; }
+.cat-user-menu-role { font-size: 12px; color: var(--cat-ink-soft); }
+
+.cat-content {
+  min-height: calc(100vh - 64px);
+  background: var(--cat-bg);
+}

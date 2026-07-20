@@ -1,0 +1,130 @@
+<div class="cat-page">
+  <div class="cat-eyebrow">{{ isEditMode() ? 'Edit product' : 'New product' }}</div>
+  <h1>{{ isEditMode() ? 'Edit product' : 'Capture a new product' }}</h1>
+
+  @if (loading()) {
+    <div class="cat-loading"><mat-spinner diameter="32"></mat-spinner></div>
+  } @else {
+    <form [formGroup]="form" class="cat-form-grid">
+      <mat-card class="cat-form-main">
+        <h2>Details</h2>
+
+        <mat-form-field appearance="outline" class="cat-full-width">
+          <mat-label>Product name</mat-label>
+          <input matInput formControlName="name" />
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="cat-full-width">
+          <mat-label>Description</mat-label>
+          <textarea matInput rows="4" formControlName="description"></textarea>
+        </mat-form-field>
+
+        <div class="cat-form-row">
+          <mat-form-field appearance="outline" class="cat-half-width">
+            <mat-label>SKU</mat-label>
+            <input matInput formControlName="sku" />
+            @if (isEditMode()) {
+              <mat-hint>SKU cannot be changed after creation.</mat-hint>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="cat-half-width">
+            <mat-label>Brand</mat-label>
+            <input matInput formControlName="brand" />
+          </mat-form-field>
+        </div>
+
+        <div class="cat-form-row">
+          <mat-form-field appearance="outline" class="cat-half-width">
+            <mat-label>Unit price</mat-label>
+            <input matInput type="number" step="0.01" formControlName="unitPrice" />
+            <span matTextPrefix>R&nbsp;</span>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="cat-half-width">
+            <mat-label>Category</mat-label>
+            <mat-select formControlName="categoryId">
+              @for (c of categories(); track c.categoryId) {
+                <mat-option [value]="c.categoryId">{{ c.name }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="cat-specs-header">
+          <h2>Specifications</h2>
+          <button mat-stroked-button type="button" (click)="addSpecification()">
+            <mat-icon>add</mat-icon>
+            Add spec
+          </button>
+        </div>
+
+        <div formArrayName="specifications" class="cat-spec-list">
+          @for (spec of specifications.controls; track spec; let i = $index) {
+            <div class="cat-spec-row" [formGroupName]="i">
+              <mat-form-field appearance="outline" class="cat-spec-key">
+                <mat-label>Attribute</mat-label>
+                <input matInput formControlName="key" placeholder="e.g. Colour" />
+              </mat-form-field>
+              <mat-form-field appearance="outline" class="cat-spec-value">
+                <mat-label>Value</mat-label>
+                <input matInput formControlName="value" placeholder="e.g. Charcoal" />
+              </mat-form-field>
+              <button mat-icon-button type="button" (click)="removeSpecification(i)">
+                <mat-icon>delete_outline</mat-icon>
+              </button>
+            </div>
+          }
+          @if (specifications.length === 0) {
+            <p class="cat-spec-empty">No specifications added yet.</p>
+          }
+        </div>
+      </mat-card>
+
+      <mat-card class="cat-form-side">
+        <h2>Product image</h2>
+
+        <div class="cat-image-drop">
+          @if (imagePreviewUrl()) {
+            <img [src]="imagePreviewUrl()!" alt="Product preview" class="cat-image-preview" />
+          } @else {
+            <div class="cat-image-placeholder">
+              <mat-icon>image</mat-icon>
+              <span>No image selected</span>
+            </div>
+          }
+        </div>
+
+        <input #fileInput type="file" accept="image/*" hidden (change)="onImageSelected($event)" />
+
+        <div class="cat-image-actions">
+          <button mat-stroked-button type="button" (click)="fileInput.click()">
+            <mat-icon>upload</mat-icon>
+            {{ imagePreviewUrl() ? 'Replace image' : 'Upload image' }}
+          </button>
+          @if (imagePreviewUrl()) {
+            <button mat-button type="button" color="warn" (click)="clearImage()">Remove</button>
+          }
+        </div>
+
+        <div class="cat-side-actions">
+          <button mat-flat-button color="primary" type="button" [disabled]="saving()" (click)="isEditMode() ? saveDraft() : saveAndSubmit()">
+            @if (saving()) {
+              <mat-spinner diameter="18"></mat-spinner>
+            } @else {
+              <span>{{ isEditMode() ? 'Save changes' : 'Submit for approval' }}</span>
+            }
+          </button>
+
+          @if (!isEditMode()) {
+            <button mat-stroked-button type="button" [disabled]="saving()" (click)="saveDraft()">
+              Save as draft
+            </button>
+          }
+
+          <a mat-button routerLink="/products">Cancel</a>
+        </div>
+      </mat-card>
+    </form>
+  }
+</div>

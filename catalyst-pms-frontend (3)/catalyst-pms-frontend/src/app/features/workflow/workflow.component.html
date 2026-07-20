@@ -1,0 +1,122 @@
+<div class="cat-page">
+  <div class="cat-eyebrow">Manager actions</div>
+  <h1>Workflow queue</h1>
+  <p class="cat-subhead">Review pending submissions and manage what's live in the catalog.</p>
+
+  @if (loading()) {
+    <div class="cat-loading"><mat-spinner diameter="32"></mat-spinner></div>
+  } @else {
+    <mat-tab-group>
+      <mat-tab [label]="'Pending approval (' + pending().length + ')'">
+        <div class="cat-queue">
+          @if (pending().length === 0) {
+            <div class="cat-empty-state">
+              <mat-icon>task_alt</mat-icon>
+              <p>Nothing waiting for review.</p>
+            </div>
+          } @else {
+            @for (item of pending(); track item.productId) {
+              <mat-card class="cat-queue-row">
+                <div class="cat-queue-main">
+                  <a [routerLink]="['/products', item.productId]" class="cat-queue-name">{{ item.name }}</a>
+                  <div class="cat-queue-meta">{{ item.sku }} &middot; {{ item.brand }} &middot; {{ item.categoryName }} &middot; {{ item.unitPrice | currency: 'ZAR' }}</div>
+                </div>
+                <div class="cat-queue-actions">
+                  <button mat-flat-button color="primary" [disabled]="acting() === item.productId" (click)="approve(item)">
+                    <mat-icon>check</mat-icon> Approve
+                  </button>
+                  <button mat-stroked-button color="warn" [disabled]="acting() === item.productId" (click)="reject(item)">
+                    <mat-icon>close</mat-icon> Reject
+                  </button>
+                </div>
+              </mat-card>
+            }
+          }
+        </div>
+      </mat-tab>
+
+      <mat-tab [label]="'Approved, ready to publish (' + approved().length + ')'">
+        <div class="cat-queue">
+          @if (approved().length === 0) {
+            <div class="cat-empty-state">
+              <mat-icon>inventory_2</mat-icon>
+              <p>Nothing approved and waiting to publish.</p>
+            </div>
+          } @else {
+            @for (item of approved(); track item.productId) {
+              <mat-card class="cat-queue-row">
+                <div class="cat-queue-main">
+                  <a [routerLink]="['/products', item.productId]" class="cat-queue-name">{{ item.name }}</a>
+                  <div class="cat-queue-meta">{{ item.sku }} &middot; {{ item.brand }} &middot; {{ item.categoryName }}</div>
+                </div>
+                <div class="cat-queue-actions">
+                  <button mat-flat-button color="primary" [disabled]="acting() === item.productId" (click)="publish(item)">
+                    <mat-icon>publish</mat-icon> Publish
+                  </button>
+                </div>
+              </mat-card>
+            }
+          }
+        </div>
+      </mat-tab>
+
+      <mat-tab [label]="'Published (' + published().length + ')'">
+        <div class="cat-queue">
+          @if (published().length === 0) {
+            <div class="cat-empty-state">
+              <mat-icon>public_off</mat-icon>
+              <p>Nothing published yet.</p>
+            </div>
+          } @else {
+            @for (item of published(); track item.productId) {
+              <mat-card class="cat-queue-row">
+                <div class="cat-queue-main">
+                  <a [routerLink]="['/products', item.productId]" class="cat-queue-name">{{ item.name }}</a>
+                  <div class="cat-queue-meta">{{ item.sku }} &middot; {{ item.brand }} &middot; {{ item.categoryName }}</div>
+                </div>
+                <div class="cat-queue-actions">
+                  <button mat-stroked-button color="warn" [disabled]="acting() === item.productId" (click)="unpublish(item)">
+                    <mat-icon>unpublished</mat-icon> Unpublish
+                  </button>
+                </div>
+              </mat-card>
+            }
+          }
+        </div>
+      </mat-tab>
+
+      <mat-tab [label]="'Archived / recycle bin (' + archived().length + ')'">
+        <div class="cat-queue">
+          @if (archived().length === 0) {
+            <div class="cat-empty-state">
+              <mat-icon>delete_outline</mat-icon>
+              <p>Nothing archived. Soft-deleted products will show up here.</p>
+            </div>
+          } @else {
+            <p class="cat-recycle-note">
+              <mat-icon>info</mat-icon>
+              These products are soft-deleted — hidden from the catalog and search, but
+              fully recoverable. Restoring returns a product to Approved status.
+            </p>
+            @for (item of archived(); track item.productId) {
+              <mat-card class="cat-queue-row">
+                <div class="cat-queue-main">
+                  <div class="cat-queue-name">{{ item.name }}</div>
+                  <div class="cat-queue-meta">
+                    {{ item.sku }} &middot; {{ item.brand }} &middot; {{ item.categoryName }} &middot;
+                    archived {{ item.deletedAt | date: 'medium' }} by {{ item.deletedByUserId }}
+                  </div>
+                </div>
+                <div class="cat-queue-actions">
+                  <button mat-flat-button color="primary" [disabled]="acting() === item.productId" (click)="restore(item)">
+                    <mat-icon>restore</mat-icon> Restore
+                  </button>
+                </div>
+              </mat-card>
+            }
+          }
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  }
+</div>

@@ -1,0 +1,15 @@
+.cat-dialog-icon {
+  vertical-align: middle;
+  margin-right: 6px;
+  &.danger { color: var(--cat-status-rejected); }
+}
+
+.cat-full-width {
+  width: 100%;
+  margin-top: 8px;
+}
+
+mat-dialog-content p {
+  color: var(--cat-ink-soft);
+  line-height: 1.5;
+}

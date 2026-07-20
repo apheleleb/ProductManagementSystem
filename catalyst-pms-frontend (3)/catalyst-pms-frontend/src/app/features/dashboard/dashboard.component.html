@@ -1,0 +1,68 @@
+<div class="cat-page">
+  <div class="cat-eyebrow">Overview</div>
+  <h1>Welcome back, {{ authService.currentUser()?.fullName }}</h1>
+  <p class="cat-subhead">Here's what's moving through the catalog right now.</p>
+
+  @if (stats(); as s) {
+    <div class="cat-stat-grid">
+      <div class="cat-card cat-stat-tile">
+        <mat-icon>inventory_2</mat-icon>
+        <div class="cat-stat-value">{{ s.total }}</div>
+        <div class="cat-stat-label">Total products</div>
+      </div>
+      <div class="cat-card cat-stat-tile accent">
+        <mat-icon>hourglass_top</mat-icon>
+        <div class="cat-stat-value">{{ s.pendingApproval }}</div>
+        <div class="cat-stat-label">Pending approval</div>
+      </div>
+      <div class="cat-card cat-stat-tile success">
+        <mat-icon>task_alt</mat-icon>
+        <div class="cat-stat-value">{{ s.approved }}</div>
+        <div class="cat-stat-label">Approved</div>
+      </div>
+      <div class="cat-card cat-stat-tile danger">
+        <mat-icon>block</mat-icon>
+        <div class="cat-stat-value">{{ s.rejected }}</div>
+        <div class="cat-stat-label">Rejected</div>
+      </div>
+      <div class="cat-card cat-stat-tile info">
+        <mat-icon>public</mat-icon>
+        <div class="cat-stat-value">{{ s.active }}</div>
+        <div class="cat-stat-label">Live in catalog</div>
+      </div>
+    </div>
+  }
+
+  <div class="cat-section-header">
+    <h2>Recent activity</h2>
+    <a mat-button color="primary" routerLink="/products">View all products</a>
+  </div>
+
+  @if (loading()) {
+    <div class="cat-loading"><mat-spinner diameter="32"></mat-spinner></div>
+  } @else if (recent().length === 0) {
+    <div class="cat-card cat-empty-state">
+      <mat-icon>inbox</mat-icon>
+      <p>No product activity yet.</p>
+    </div>
+  } @else {
+    <div class="cat-card cat-recent-list">
+      @for (item of recent(); track item.productId) {
+        <a class="cat-recent-row" [routerLink]="['/products', item.productId]">
+          <div class="cat-recent-main">
+            <div class="cat-recent-name">{{ item.name }}</div>
+            <div class="cat-recent-meta">{{ item.sku }} &middot; {{ item.brand }} &middot; {{ item.categoryName }}</div>
+          </div>
+          <span class="cat-status-chip" [ngClass]="statusSlug(item.statusName)">{{ item.statusName }}</span>
+        </a>
+      }
+    </div>
+  }
+
+  @if (authService.isCapturer()) {
+    <a mat-fab extended color="primary" class="cat-fab" routerLink="/products/new">
+      <mat-icon>add</mat-icon>
+      New product
+    </a>
+  }
+</div>

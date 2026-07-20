@@ -1,0 +1,25 @@
+<h2 mat-dialog-title>
+  <mat-icon *ngIf="data.tone === 'danger'" class="cat-dialog-icon danger">warning</mat-icon>
+  {{ data.title }}
+</h2>
+
+<mat-dialog-content>
+  <p>{{ data.message }}</p>
+
+  <mat-form-field *ngIf="data.requireComment" appearance="outline" class="cat-full-width">
+    <mat-label>{{ data.commentLabel || 'Comment' }}</mat-label>
+    <textarea matInput rows="3" [(ngModel)]="comment" name="comment"></textarea>
+  </mat-form-field>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">{{ data.cancelLabel || 'Cancel' }}</button>
+  <button
+    mat-flat-button
+    [color]="data.tone === 'danger' ? 'warn' : 'primary'"
+    [disabled]="!canConfirm"
+    (click)="onConfirm()"
+  >
+    {{ data.confirmLabel || 'Confirm' }}
+  </button>
+</mat-dialog-actions>

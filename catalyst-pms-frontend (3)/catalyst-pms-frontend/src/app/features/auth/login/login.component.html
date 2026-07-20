@@ -1,0 +1,92 @@
+<!-- <div class="cat-auth-screen">
+  <div class="cat-auth-panel">
+    <div class="cat-auth-brand">
+      <mat-icon>hexagon</mat-icon>
+      <span>Catalyst PMS</span>
+    </div>
+    <h1>Product operations,<br />kept in order.</h1>
+    <p>
+      Capture products, route them through approval, and publish to the catalog —
+      all from one place.
+    </p>
+  </div>
+
+  <div class="cat-auth-form-wrap">
+    <mat-card class="cat-auth-card">
+      <h2>Sign in</h2>
+      <p class="cat-auth-subtitle">
+        Sign in with your organization account to access your workspace.
+      </p>
+
+      <button mat-flat-button color="primary" class="cat-full-width cat-submit-btn" type="button" (click)="signIn()">
+        <mat-icon>login</mat-icon>
+        <span>Sign in with Microsoft</span>
+      </button>
+
+      <p class="cat-auth-note">
+        Don't have an account? Contact your administrator to be added as a
+        Product Capturer or Product Manager.
+      </p>
+    </mat-card>
+  </div>
+</div> -->
+
+<div class="cat-auth-screen">
+  <div class="cat-auth-panel">
+    <div class="cat-auth-brand">
+      <mat-icon>hexagon</mat-icon>
+      <span>Catalyst PMS</span>
+    </div>
+    <h1>Product operations,<br />kept in order.</h1>
+    <p>
+      Capture products, route them through approval, and publish to the catalog —
+      all from one place.
+    </p>
+  </div>
+
+  <div class="cat-auth-form-wrap">
+    <mat-card class="cat-auth-card">
+      <h2>Sign in</h2>
+      <p class="cat-auth-subtitle">
+        Enter your details, then continue with your organization account.
+      </p>
+
+      <form [formGroup]="preLoginForm" class="cat-auth-form">
+        <mat-form-field appearance="outline" class="cat-full-width">
+          <mat-label>Full name</mat-label>
+          <input matInput formControlName="name" autocomplete="name" />
+          @if (preLoginForm.get('name')?.hasError('required') && preLoginForm.get('name')?.touched) {
+            <mat-error>Name is required</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="cat-full-width">
+          <mat-label>Email</mat-label>
+          <input matInput formControlName="email" autocomplete="email" type="email" />
+          @if (preLoginForm.get('email')?.hasError('required') && preLoginForm.get('email')?.touched) {
+            <mat-error>Email is required</mat-error>
+          }
+          @if (preLoginForm.get('email')?.hasError('email') && preLoginForm.get('email')?.touched) {
+            <mat-error>Enter a valid email</mat-error>
+          }
+        </mat-form-field>
+
+        <button
+          mat-flat-button
+          color="primary"
+          class="cat-full-width cat-submit-btn"
+          type="button"
+          (click)="signIn()"
+        >
+          <mat-icon>login</mat-icon>
+          <span>Sign in with Microsoft</span>
+        </button>
+      </form>
+
+      <p class="cat-auth-note">
+        Don't have an account? Contact your administrator to be added as a
+        Product Capturer or Product Manager.
+      </p>
+    </mat-card>
+  </div>
+</div>

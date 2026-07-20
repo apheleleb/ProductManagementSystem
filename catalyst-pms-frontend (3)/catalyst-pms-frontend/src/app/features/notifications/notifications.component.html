@@ -1,0 +1,32 @@
+<div class="cat-page">
+  <div class="cat-eyebrow">Updates</div>
+  <h1>Notifications</h1>
+
+  @if (loading()) {
+    <div class="cat-loading"><mat-spinner diameter="32"></mat-spinner></div>
+  } @else if (notifications().length === 0) {
+    <div class="cat-card cat-empty-state">
+      <mat-icon>notifications_none</mat-icon>
+      <p>You're all caught up.</p>
+    </div>
+  } @else {
+    <div class="cat-card cat-notif-list">
+      @for (n of notifications(); track n.notificationId) {
+        <a
+          class="cat-notif-row"
+          [class.unread]="!n.isRead"
+          [routerLink]="['/products', n.productId]"
+          (click)="markAsRead(n)"
+        >
+          @if (!n.isRead) {
+            <span class="cat-notif-dot"></span>
+          }
+          <div class="cat-notif-main">
+            <div class="cat-notif-message">{{ n.message }}</div>
+            <div class="cat-notif-meta">{{ n.createdAt | date: 'medium' }}</div>
+          </div>
+        </a>
+      }
+    </div>
+  }
+</div>

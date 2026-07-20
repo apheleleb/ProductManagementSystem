@@ -1,0 +1,132 @@
+
+// Include theming for Angular Material with `mat.theme()`.
+// This Sass mixin will define CSS variables that are used for styling Angular Material
+// components according to the Material 3 design spec.
+// Learn more about theming and how to use it for your application's
+// custom components at https://material.angular.dev/guide/theming
+@use '@angular/material' as mat;
+
+html {
+  @include mat.theme((
+    color: (
+      primary: mat.$azure-palette,
+      tertiary: mat.$blue-palette,
+    ),
+    typography: Roboto,
+    density: 0,
+  ));
+}
+
+body {
+  // Default the application to a light color theme. This can be changed to
+  // `dark` to enable the dark color theme, or to `light dark` to defer to the
+  // user's system settings.
+  color-scheme: light;
+
+  // Set a default background, font and text colors for the application using
+  // Angular Material's system-level CSS variables. Learn more about these
+  // variables at https://material.angular.dev/guide/system-variables
+  background-color: var(--mat-sys-surface);
+  color: var(--mat-sys-on-surface);
+  font: var(--mat-sys-body-medium);
+
+  // Reset the user agent margin.
+  margin: 0;
+}
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* ── Catalyst PMS design tokens ─────────────────────────────────────────── */
+:root {
+  --cat-bg: #f5f6f8;
+  --cat-surface: #ffffff;
+  --cat-ink: #1a2233;
+  --cat-ink-soft: #5b6472;
+  --cat-border: #e2e5ea;
+  --cat-primary: #17233d;
+  --cat-primary-contrast: #ffffff;
+  --cat-accent: #d9770a;
+  --cat-accent-soft: #fbe8cf;
+
+  --cat-status-draft: #7c8698;
+  --cat-status-pending: #d9770a;
+  --cat-status-approved: #1f8b4c;
+  --cat-status-rejected: #c13a3a;
+  --cat-status-published: #1f5fbf;
+  --cat-status-archived: #9096a3;
+
+  --cat-font-display: 'Manrope', 'Segoe UI', sans-serif;
+  --cat-font-body: 'Inter', 'Segoe UI', sans-serif;
+
+  --cat-radius: 10px;
+  --cat-shadow: 0 1px 2px rgba(23, 35, 61, 0.06), 0 4px 16px rgba(23, 35, 61, 0.05);
+}
+
+html, body {
+  height: 100%;
+  background: var(--cat-bg);
+  color: var(--cat-ink);
+  font-family: var(--cat-font-body);
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: var(--cat-font-display);
+  font-weight: 700;
+  color: var(--cat-ink);
+  margin: 0 0 8px 0;
+}
+
+.cat-page {
+  padding: 24px;
+  max-width: 1240px;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.cat-card {
+  background: var(--cat-surface);
+  border: 1px solid var(--cat-border);
+  border-radius: var(--cat-radius);
+  box-shadow: var(--cat-shadow);
+}
+
+.cat-eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--cat-ink-soft);
+}
+
+.cat-status-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+  white-space: nowrap;
+}
+.cat-status-chip.draft { background: var(--cat-status-draft); }
+.cat-status-chip.pending-approval { background: var(--cat-status-pending); }
+.cat-status-chip.approved { background: var(--cat-status-approved); }
+.cat-status-chip.rejected { background: var(--cat-status-rejected); }
+.cat-status-chip.published { background: var(--cat-status-published); }
+.cat-status-chip.archived { background: var(--cat-status-archived); }
+
+.cat-spacer { flex: 1 1 auto; }
+
+.cat-empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--cat-ink-soft);
+}
+
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-thumb { background: var(--cat-border); border-radius: 8px; }
+
+* { box-sizing: border-box; }

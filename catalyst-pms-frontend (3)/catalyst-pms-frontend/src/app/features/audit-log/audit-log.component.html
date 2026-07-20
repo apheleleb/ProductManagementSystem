@@ -1,0 +1,46 @@
+<div class="cat-page">
+  <div class="cat-eyebrow">Traceability</div>
+  <h1>Audit log</h1>
+  <p class="cat-subhead">Look up the full change history for a product by its ID.</p>
+
+  <mat-card class="cat-search-card">
+    <mat-form-field appearance="outline" class="cat-search-field">
+      <mat-label>Product ID</mat-label>
+      <input matInput type="number" [formControl]="productIdControl" (keyup.enter)="search()" />
+      <mat-icon matPrefix>tag</mat-icon>
+    </mat-form-field>
+    <button mat-flat-button color="primary" (click)="search()">
+      <mat-icon>search</mat-icon>
+      Search
+    </button>
+  </mat-card>
+
+  @if (loading()) {
+    <div class="cat-loading"><mat-spinner diameter="32"></mat-spinner></div>
+  } @else if (searched() && entries().length === 0) {
+    <div class="cat-card cat-empty-state">
+      <mat-icon>history_toggle_off</mat-icon>
+      <p>No audit entries found for that product.</p>
+    </div>
+  } @else if (entries().length > 0) {
+    <div class="cat-card cat-log-list">
+      @for (e of entries(); track e.logId) {
+        <div class="cat-log-row">
+          <div class="cat-log-main">
+            <div class="cat-log-title">
+              {{ e.actionType }}
+              @if (e.fieldName) { &middot; {{ e.fieldName }} }
+            </div>
+            @if (e.oldValue || e.newValue) {
+              <div class="cat-log-change">{{ e.oldValue || '—' }} &rarr; {{ e.newValue || '—' }}</div>
+            }
+          </div>
+          <div class="cat-log-meta">
+            <div>{{ e.actorUserId }}</div>
+            <div>{{ e.loggedAt | date: 'medium' }}</div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

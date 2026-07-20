@@ -1,0 +1,6 @@
+@CatalystPMS_HostAddress = http://localhost:5186
+
+GET {{CatalystPMS_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

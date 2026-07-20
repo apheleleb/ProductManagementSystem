@@ -1,0 +1,169 @@
+<div class="cat-page">
+  @if (loading()) {
+    <div class="cat-loading"><mat-spinner diameter="32"></mat-spinner></div>
+  } @else if (product(); as p) {
+    <a routerLink="/products" class="cat-back-link">
+      <mat-icon>arrow_back</mat-icon>
+      Back to products
+    </a>
+
+    <div class="cat-detail-header">
+      <div>
+        <div class="cat-eyebrow">{{ p.sku }} &middot; {{ p.brand }}</div>
+        <h1>{{ p.name }}</h1>
+        <span class="cat-status-chip" [ngClass]="statusSlug(p.statusName)">{{ p.statusName }}</span>
+      </div>
+
+      <div class="cat-detail-actions">
+        @if (canEdit()) {
+          <a mat-stroked-button [routerLink]="['/products', p.productId, 'edit']">
+            <mat-icon>edit</mat-icon>
+            Edit
+          </a>
+        }
+        @if (canSubmit()) {
+          <button mat-flat-button color="primary" [disabled]="acting()" (click)="submitForApproval()">
+            <mat-icon>send</mat-icon>
+            Submit for approval
+          </button>
+        }
+
+        @if (authService.isManager()) {
+          @if (p.statusName === ProductStatusName.PendingApproval) {
+            <button mat-flat-button color="primary" [disabled]="acting()" (click)="approve()">
+              <mat-icon>check</mat-icon>
+              Approve
+            </button>
+            <button mat-stroked-button color="warn" [disabled]="acting()" (click)="reject()">
+              <mat-icon>close</mat-icon>
+              Reject
+            </button>
+          }
+          @if (p.statusName === ProductStatusName.Approved) {
+            <button mat-flat-button color="primary" [disabled]="acting()" (click)="publish()">
+              <mat-icon>publish</mat-icon>
+              Publish
+            </button>
+          }
+          @if (p.statusName === ProductStatusName.Published) {
+            <button mat-stroked-button color="warn" [disabled]="acting()" (click)="unpublish()">
+              <mat-icon>unpublished</mat-icon>
+              Unpublish
+            </button>
+          }
+          @if (p.statusName !== ProductStatusName.Archived) {
+            <button mat-stroked-button color="warn" [disabled]="acting()" (click)="archive()">
+              <mat-icon>archive</mat-icon>
+              Archive
+            </button>
+          }
+        }
+      </div>
+    </div>
+
+    <div class="cat-detail-grid">
+      <div class="cat-detail-main">
+        <mat-card class="cat-detail-card">
+          <h2>Description</h2>
+          <p>{{ p.description }}</p>
+
+          <div class="cat-fact-grid">
+            <div>
+              <div class="cat-fact-label">Category</div>
+              <div class="cat-fact-value">{{ p.categoryName }}</div>
+            </div>
+            <div>
+              <div class="cat-fact-label">Unit price</div>
+              <div class="cat-fact-value">{{ p.unitPrice | currency: 'ZAR' }}</div>
+            </div>
+            <div>
+              <div class="cat-fact-label">Created</div>
+              <div class="cat-fact-value">{{ p.createdAt | date: 'medium' }}</div>
+            </div>
+            <div>
+              <div class="cat-fact-label">Last updated</div>
+              <div class="cat-fact-value">{{ p.updatedAt | date: 'medium' }}</div>
+            </div>
+          </div>
+        </mat-card>
+
+        <mat-card class="cat-detail-card">
+          <h2>Specifications</h2>
+          @if (p.specifications.length === 0) {
+            <p class="cat-muted">No specifications recorded.</p>
+          } @else {
+            <div class="cat-spec-grid">
+              @for (spec of p.specifications; track spec.key) {
+                <div class="cat-spec-item">
+                  <div class="cat-fact-label">{{ spec.key }}</div>
+                  <div class="cat-fact-value">{{ spec.value }}</div>
+                </div>
+              }
+            </div>
+          }
+        </mat-card>
+
+        <mat-card class="cat-detail-card">
+          <mat-tab-group>
+            <mat-tab label="Approval history">
+              @if (p.approvalHistory.length === 0) {
+                <p class="cat-muted cat-tab-pad">No approval activity yet.</p>
+              } @else {
+                <div class="cat-timeline">
+                  @for (h of p.approvalHistory; track h.actionDate) {
+                    <div class="cat-timeline-item">
+                      <div class="cat-timeline-dot"></div>
+                      <div>
+                        <div class="cat-timeline-title">{{ h.action }}</div>
+                        @if (h.comment) {
+                          <div class="cat-timeline-comment">"{{ h.comment }}"</div>
+                        }
+                        <div class="cat-timeline-meta">{{ h.actorUserId }} &middot; {{ h.actionDate | date: 'medium' }}</div>
+                      </div>
+                    </div>
+                  }
+                </div>
+              }
+            </mat-tab>
+            <mat-tab label="Audit log">
+              @if (p.auditLog.length === 0) {
+                <p class="cat-muted cat-tab-pad">No audit entries yet.</p>
+              } @else {
+                <div class="cat-timeline">
+                  @for (a of p.auditLog; track a.loggedAt) {
+                    <div class="cat-timeline-item">
+                      <div class="cat-timeline-dot muted"></div>
+                      <div>
+                        <div class="cat-timeline-title">
+                          {{ a.actionType }}
+                          @if (a.fieldName) { &middot; {{ a.fieldName }} }
+                        </div>
+                        @if (a.oldValue || a.newValue) {
+                          <div class="cat-timeline-comment">{{ a.oldValue || '—' }} &rarr; {{ a.newValue || '—' }}</div>
+                        }
+                        <div class="cat-timeline-meta">{{ a.actorUserId }} &middot; {{ a.loggedAt | date: 'medium' }}</div>
+                      </div>
+                    </div>
+                  }
+                </div>
+              }
+            </mat-tab>
+          </mat-tab-group>
+        </mat-card>
+      </div>
+
+      <div class="cat-detail-side">
+        <mat-card class="cat-image-card">
+          @if (p.hasImage) {
+            <img [src]="imageUrl" alt="{{ p.name }}" class="cat-detail-image" />
+          } @else {
+            <div class="cat-image-placeholder">
+              <mat-icon>image</mat-icon>
+              <span>No image uploaded</span>
+            </div>
+          }
+        </mat-card>
+      </div>
+    </div>
+  }
+</div>

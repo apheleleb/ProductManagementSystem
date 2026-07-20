@@ -1,0 +1,41 @@
+.cat-page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.cat-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  padding: 16px 20px;
+  margin-bottom: 20px;
+
+  mat-form-field { margin-bottom: -1.25em; }
+}
+
+.cat-search-field { flex: 1 1 260px; }
+
+.cat-table-card { overflow: hidden; }
+
+.cat-table { width: 100%; }
+
+.cat-table-link {
+  color: var(--cat-primary);
+  font-weight: 600;
+  text-decoration: none;
+  &:hover { text-decoration: underline; }
+}
+
+.cat-loading {
+  display: flex;
+  justify-content: center;
+  padding: 48px;
+}
+
+@media (max-width: 720px) {
+  .cat-table-card { overflow-x: auto; }
+  .cat-table { min-width: 720px; }
+}

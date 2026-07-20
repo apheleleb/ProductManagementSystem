@@ -1,0 +1,124 @@
+<div class="cat-page">
+  <div class="cat-page-header">
+    <div>
+      <div class="cat-eyebrow">Catalog</div>
+      <h1>Products</h1>
+    </div>
+    @if (authService.isCapturer()) {
+      <a mat-flat-button color="primary" routerLink="/products/new">
+        <mat-icon>add</mat-icon>
+        New product
+      </a>
+    }
+  </div>
+
+  <div class="cat-card cat-filter-bar">
+    <mat-form-field appearance="outline" class="cat-search-field">
+      <mat-label>Search products</mat-label>
+      <input matInput [formControl]="searchControl" placeholder="Name, SKU or brand" />
+      <mat-icon matPrefix>search</mat-icon>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Category</mat-label>
+      <mat-select [formControl]="categoryControl">
+        <mat-option [value]="null">All categories</mat-option>
+        @for (c of categories(); track c.categoryId) {
+          <mat-option [value]="c.categoryId">{{ c.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Status</mat-label>
+      <mat-select [formControl]="statusControl">
+        <mat-option [value]="null">All statuses</mat-option>
+        @for (s of statusOptions; track s.id) {
+          <mat-option [value]="s.id">{{ s.name }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <button mat-button (click)="clearFilters()">
+      <mat-icon>filter_alt_off</mat-icon>
+      Clear
+    </button>
+  </div>
+
+  <div class="cat-card cat-table-card">
+    @if (loading()) {
+      <div class="cat-loading"><mat-spinner diameter="32"></mat-spinner></div>
+    } @else if (products().length === 0) {
+      <div class="cat-empty-state">
+        <mat-icon>search_off</mat-icon>
+        <p>No products match your filters.</p>
+      </div>
+    } @else {
+      <table mat-table [dataSource]="products()" class="cat-table">
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Product</th>
+          <td mat-cell *matCellDef="let p">
+            <a class="cat-table-link" [routerLink]="['/products', p.productId]">{{ p.name }}</a>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="sku">
+          <th mat-header-cell *matHeaderCellDef>SKU</th>
+          <td mat-cell *matCellDef="let p">{{ p.sku }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="brand">
+          <th mat-header-cell *matHeaderCellDef>Brand</th>
+          <td mat-cell *matCellDef="let p">{{ p.brand }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="category">
+          <th mat-header-cell *matHeaderCellDef>Category</th>
+          <td mat-cell *matCellDef="let p">{{ p.categoryName }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef>Status</th>
+          <td mat-cell *matCellDef="let p">
+            <span class="cat-status-chip" [ngClass]="statusSlug(p.statusName)">{{ p.statusName }}</span>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="price">
+          <th mat-header-cell *matHeaderCellDef>Price</th>
+          <td mat-cell *matCellDef="let p">{{ p.unitPrice | currency: 'ZAR' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="updated">
+          <th mat-header-cell *matHeaderCellDef>Updated</th>
+          <td mat-cell *matCellDef="let p">{{ p.updatedAt | date: 'mediumDate' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef></th>
+          <td mat-cell *matCellDef="let p">
+            <a mat-icon-button [routerLink]="['/products', p.productId]" matTooltip="View details">
+              <mat-icon>visibility</mat-icon>
+            </a>
+            @if (authService.isCapturer()) {
+              <a mat-icon-button [routerLink]="['/products', p.productId, 'edit']" matTooltip="Edit">
+                <mat-icon>edit</mat-icon>
+              </a>
+            }
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+
+      <mat-paginator
+        [length]="totalCount()"
+        [pageSize]="pageSize()"
+        [pageIndex]="page() - 1"
+        [pageSizeOptions]="[10, 20, 50]"
+        (page)="onPageChange($event)"
+      ></mat-paginator>
+    }
+  </div>
+</div>

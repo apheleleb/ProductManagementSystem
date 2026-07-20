@@ -1,0 +1,66 @@
+<mat-sidenav-container class="cat-shell">
+  <mat-sidenav
+    #sidenav
+    [mode]="isHandset() ? 'over' : 'side'"
+    [opened]="!isHandset()"
+    class="cat-sidenav"
+  >
+    <div class="cat-brand">
+      <mat-icon>hexagon</mat-icon>
+      <span>Catalyst PMS</span>
+    </div>
+
+    <mat-nav-list>
+      @for (item of visibleNavItems(); track item.route) {
+        <a
+          mat-list-item
+          [routerLink]="item.route"
+          routerLinkActive="active-link"
+          (click)="isHandset() && sidenav.close()"
+        >
+          <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+          <span matListItemTitle>{{ item.label }}</span>
+        </a>
+      }
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <mat-toolbar class="cat-toolbar">
+      @if (isHandset()) {
+        <button mat-icon-button (click)="sidenav.toggle()">
+          <mat-icon>menu</mat-icon>
+        </button>
+      }
+
+      <span class="cat-spacer"></span>
+
+      <button mat-icon-button routerLink="/notifications" matBadgeColor="warn"
+              [matBadge]="unreadCount() > 0 ? unreadCount() : null" matBadgeSize="small">
+        <mat-icon>notifications</mat-icon>
+      </button>
+
+      <button mat-button [matMenuTriggerFor]="userMenu" class="cat-user-btn">
+        <mat-icon>account_circle</mat-icon>
+        <span class="cat-user-name">{{ authService.currentUser()?.fullName }}</span>
+        <mat-icon>arrow_drop_down</mat-icon>
+      </button>
+
+      <mat-menu #userMenu="matMenu">
+        <div class="cat-user-menu-header">
+          <div class="cat-user-menu-name">{{ authService.currentUser()?.fullName }}</div>
+          <div class="cat-user-menu-role">{{ authService.currentUser()?.role }}</div>
+        </div>
+        <mat-divider></mat-divider>
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          <span>Log out</span>
+        </button>
+      </mat-menu>
+    </mat-toolbar>
+
+    <div class="cat-content">
+      <router-outlet />
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
