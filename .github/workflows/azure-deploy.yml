@@ -9,10 +9,10 @@ on:
       - main
 
 env:
-  DOTNET_VERSION: '8.0.x'
-  AZURE_WEBAPP_NAME: catalystpms          # change to your App Service name
-  AZURE_WEBAPP_PACKAGE_PATH: './publish'
-  PROJECT_PATH: 'CatalystPMS/CatalystPMS.csproj'
+  DOTNET_VERSION: "8.0.x"
+  AZURE_WEBAPP_NAME: catalystpms-api # change to your App Service name
+  AZURE_WEBAPP_PACKAGE_PATH: "./publish"
+  PROJECT_PATH: "CatalystPMS/CatalystPMS.csproj"
 
 jobs:
   build-and-test:
