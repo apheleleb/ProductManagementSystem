@@ -12,6 +12,7 @@ on:
       - main
     paths:
       - 'catalyst-pms-frontend (3)/**'
+  workflow_dispatch:
 
 jobs:
   build_and_deploy:
