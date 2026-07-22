@@ -4,9 +4,13 @@ on:
   push:
     branches:
       - main
+    paths:
+      - "CatalystPMS/**"
   pull_request:
     branches:
       - main
+    paths:
+      - "CatalystPMS/**"
 
 env:
   DOTNET_VERSION: "8.0.x"
