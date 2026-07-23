@@ -141,7 +141,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AngularCors", policy => policy
-        .WithOrigins("http://localhost:4200", "https://agreeable-flower-0aa0ffd0f.7.azurestaticapps.net")
+        .WithOrigins("http://localhost:4200", "https://mango-bay-0ca98f21e.7.azurestaticapps.net")
         .AllowAnyHeader()
         .AllowAnyMethod());
 });
