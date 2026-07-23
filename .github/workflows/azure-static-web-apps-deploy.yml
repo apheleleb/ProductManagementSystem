@@ -6,13 +6,13 @@ on:
     branches:
       - main
     paths:
-      - "catalyst-pms-frontend (3)/**"
+      - "catalyst-pms-frontend-app/**"
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches:
       - main
     paths:
-      - "catalyst-pms-frontend (3)/**"
+      - "catalyst-pms-frontend-app/**"
 
 jobs:
   build_and_deploy:
@@ -31,7 +31,7 @@ jobs:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
-          app_location: "catalyst-pms-frontend (3)/catalyst-pms-frontend"
+          app_location: "catalyst-pms-frontend-app/catalyst-pms-frontend"
           output_location: "dist/catalyst-pms-frontend/browser"
 
   close_pull_request_job:
