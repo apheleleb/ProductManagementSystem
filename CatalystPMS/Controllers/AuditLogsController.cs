@@ -18,11 +18,18 @@ namespace CatalystPMS.Controllers
             _auditLogService = auditLogService;
         }
 
-        /// <summary>Get full audit history for a product. Both roles can view.</summary>
-        [HttpGet("product/{productId:int}")]
-        public async Task<IActionResult> GetByProduct(int productId)
+        /// <summary>
+        /// Returns audit entries system-wide by default, most recent first.
+        /// Optional filters narrow the results — none are required.
+        /// </summary>
+        [HttpGet]
+        public async Task<IActionResult> GetAll(
+            [FromQuery] int? productId,
+            [FromQuery] string? actionType,
+            [FromQuery] DateTime? from,
+            [FromQuery] DateTime? to)
         {
-            var logs = await _auditLogService.GetByProductAsync(productId);
+            var logs = await _auditLogService.GetAllAsync(productId, actionType, from, to);
             return Ok(ApiResponse<IEnumerable<AuditLogResponseDto>>.Ok(logs));
         }
     }

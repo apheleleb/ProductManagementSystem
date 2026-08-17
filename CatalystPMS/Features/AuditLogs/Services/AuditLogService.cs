@@ -10,11 +10,26 @@ namespace CatalystPMS.Features.AuditLogs.Services
 
         public AuditLogService(AppDbContext context) => _context = context;
 
-        public async Task<IEnumerable<AuditLogResponseDto>> GetByProductAsync(int productId)
+        public async Task<IEnumerable<AuditLogResponseDto>> GetAllAsync(
+            int? productId = null,
+            string? actionType = null,
+            DateTime? from = null,
+            DateTime? to = null)
         {
-            var logs = await _context.AuditLogs
-                .Where(a => a.ProductId == productId)
+            var query = _context.AuditLogs.AsQueryable();
+
+            if (productId.HasValue)
+                query = query.Where(a => a.ProductId == productId.Value);
+            if (!string.IsNullOrWhiteSpace(actionType))
+                query = query.Where(a => a.ActionType == actionType);
+            if (from.HasValue)
+                query = query.Where(a => a.LoggedAt >= from.Value);
+            if (to.HasValue)
+                query = query.Where(a => a.LoggedAt <= to.Value);
+
+            var logs = await query
                 .OrderByDescending(a => a.LoggedAt)
+                .Take(500) // sane cap for now — add real paging if the log grows large
                 .ToListAsync();
 
             return logs.Select(a => new AuditLogResponseDto
