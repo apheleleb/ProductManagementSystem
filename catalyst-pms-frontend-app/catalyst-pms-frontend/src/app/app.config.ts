@@ -49,23 +49,25 @@ function msalInterceptorConfigFactory(): MsalInterceptorConfiguration {
 }
 
 export const appConfig: ApplicationConfig = {
-  providers: [
-    provideBrowserGlobalErrorListeners(),
-    provideZoneChangeDetection({ eventCoalescing: true }),
-    provideRouter(routes),
-    provideAnimations(),
+providers: [
+  provideBrowserGlobalErrorListeners(),
+  provideZoneChangeDetection({ eventCoalescing: true }),
+  provideRouter(routes),
+  provideAnimations(),
 
-    // withInterceptorsFromDi() lets MsalInterceptor (a class-based interceptor)
-    // run alongside our own functional errorInterceptor in the same pipeline.
-    provideHttpClient(withInterceptors([errorInterceptor]), withInterceptorsFromDi()),
+  provideAppInitializer(() => {
+    const msalService = inject(MsalService);
+    return firstValueFrom(msalService.initialize());
+  }),
 
-    { provide: MSAL_INSTANCE, useValue: msalInstance },
-    { provide: MSAL_GUARD_CONFIG, useFactory: msalGuardConfigFactory },
-    { provide: MSAL_INTERCEPTOR_CONFIG, useFactory: msalInterceptorConfigFactory },
-    { provide: HTTP_INTERCEPTORS, useClass: MsalInterceptor, multi: true },
+  provideHttpClient(withInterceptors([errorInterceptor]), withInterceptorsFromDi()),
+  { provide: MSAL_INSTANCE, useValue: msalInstance },
+  { provide: MSAL_GUARD_CONFIG, useFactory: msalGuardConfigFactory },
+  { provide: MSAL_INTERCEPTOR_CONFIG, useFactory: msalInterceptorConfigFactory },
+  { provide: HTTP_INTERCEPTORS, useClass: MsalInterceptor, multi: true },
 
-    MsalService,
-    MsalGuard,
-    MsalBroadcastService
-  ]
+  MsalService,
+  MsalGuard,
+  MsalBroadcastService
+]
 };
