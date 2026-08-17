@@ -45,7 +45,7 @@ export class LoginComponent {
     // Redirects the whole browser tab to Entra ID's hosted login page.
     // On success, Entra ID redirects back to this app's redirectUri, and
     // App.ngOnInit()'s handleRedirectObservable() picks up the result.
-    //console.log('signIn fired')
+    console.log('signIn fired')
     this.authService.login();
   }
 }
