@@ -130,3 +130,18 @@ h1, h2, h3, h4, h5 {
 ::-webkit-scrollbar-thumb { background: var(--cat-border); border-radius: 8px; }
 
 * { box-sizing: border-box; }
+
+.cat-stat-tile {
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+  &:hover { box-shadow: 0 2px 4px rgba(23,35,61,0.08), 0 8px 24px rgba(23,35,61,0.08); transform: translateY(-1px); }
+
+  mat-icon {
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 8px;
+    background: var(--cat-bg);
+    font-size: 20px;
+  }
+}
+
+.cat-recent-list { margin-bottom: 96px; } // clears the fixed FAB so it never overlaps the last row

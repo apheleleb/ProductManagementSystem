@@ -11,6 +11,7 @@ on:
       - main
     paths:
       - "CatalystPMS/**"
+      - ".github/workflows/azure-app-service-backend.yml"
 
 env:
   DOTNET_VERSION: "8.0.x"
